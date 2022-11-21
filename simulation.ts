@@ -49,6 +49,10 @@ export class BasicSimulation {
 		this.rules = rules;
 	}
 
+	setMaxModelTime(time: number) {
+		this.maxModelTime = time;
+	}
+
 	/**
 	 * @returns state without first (e.g. next) event
 	 */
