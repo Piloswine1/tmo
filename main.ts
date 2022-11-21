@@ -1,15 +1,11 @@
-import { ITS } from "./ITS.ts";
+import { Event1 } from "./events/event1.ts";
+import { BasicSimulation } from "./simulation.ts";
 
-const its = ITS();
 
-console.log(its.next());
-console.log(its.next());
-console.log(its.next());
-console.log(its.next());
-console.log(its.next());
-console.log(its.next());
-console.log(its.next());
-console.log(its.next());
-console.log(its.next());
-console.log(its.next());
-console.log(its.next());
+for (let i = 0; i < 2; i++) {
+	const simulation = new BasicSimulation([new Event1(0)])
+	simulation.setSeed(i);
+
+	simulation.run();
+	simulation.dumpToCSV(`logs/${i}.csv`);
+}

@@ -1,7 +1,7 @@
 export function* randomSeq(x = 1): Generator<number> {
-	const N = 4294967296;
-	const A = 1664525;
-	const C = 1013904223;
+	const A = 84589;
+	const C = 45989;
+	const N = 217728;
 
 	while (true) {
 		x = (A * x + C) % N;
