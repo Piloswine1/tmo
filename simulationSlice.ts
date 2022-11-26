@@ -1,11 +1,16 @@
-import { IEvent } from "./events/event.type.ts";
-import { BasicParams, BasicRules } from "./simulation.ts";
+import { BasicEvent } from "./events/event.type.ts";
+import { BasicMetrics, BasicParams, BasicRules } from "./simulation.ts";
 
-export type SimulationSliceType<T, R> = {
-	randomizer: Generator<number>;
-	eventList: IEvent<T, R>[];
-	simParams: T;
-	rules: R;
-}
+export type SimulationSliceType<T, R, M> = {
+  randomizer: Generator<number>;
+  eventList: BasicEvent[];
+  metrics: M;
+  simParams: T;
+  rules: R;
+};
 
-export type BasicSimSlice = SimulationSliceType<BasicParams, BasicRules>
+export type BasicSimSlice = SimulationSliceType<
+  BasicParams,
+  BasicRules,
+  BasicMetrics
+>;

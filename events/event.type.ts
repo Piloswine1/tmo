@@ -1,7 +1,7 @@
-import { SimulationSliceType } from "../simulationSlice.ts";
+import { BasicSimSlice } from "../simulationSlice.ts";
 
-export interface IEvent<T, R> {
-	modelTime: number;
+export interface BasicEvent {
+  modelTime: number;
 
-	handle(state: SimulationSliceType<T, R>): SimulationSliceType<T, R>;
+  handle(state: BasicSimSlice): BasicSimSlice;
 }

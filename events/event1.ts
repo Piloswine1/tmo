@@ -1,32 +1,35 @@
-import { IEvent } from "./event.type.ts";
+import { BasicEvent } from "./event.type.ts";
 import { Event2 } from "./event2.ts";
-import { BasicParams, BasicRules } from "../simulation.ts";
 import { BasicSimSlice } from "../simulationSlice.ts";
 
-export class Event1 implements IEvent<BasicParams, BasicRules> {
-	modelTime: number;
+export class Event1 implements BasicEvent {
+  modelTime: number;
 
-	constructor(start: number) {
-		this.modelTime = start;
-	}
+  constructor(start: number) {
+    this.modelTime = start;
+  }
 
-	handle(state: BasicSimSlice): BasicSimSlice {
-		state.simParams.k++;
+  handle(state: BasicSimSlice): BasicSimSlice {
+    state.simParams.k++;
 
-		if (state.simParams.z === 0) {
-			state.simParams.z++;
-			state.eventList.push(new Event2(this.modelTime + state.randomizer.next().value))
-		} else {
-			if (state.simParams.k <= state.rules.maxK) {
-				// queue
-			} else {
-				state.simParams.k--;
-				state.simParams.failed++;
-			}
-		}
+    if (state.simParams.z === 0) {
+      state.simParams.z++;
+      state.eventList.push(
+        new Event2(this.modelTime + state.randomizer.next().value),
+      );
+    } else {
+      if (state.simParams.k <= state.rules.maxK) {
+        // queue
+      } else {
+        state.simParams.k--;
+        state.simParams.failed++;
+      }
+    }
 
-		state.eventList.push(new Event1(this.modelTime + state.randomizer.next().value));
+    state.eventList.push(
+      new Event1(this.modelTime + state.randomizer.next().value),
+    );
 
-		return state;
-	}
+    return state;
+  }
 }
