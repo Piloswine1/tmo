@@ -12,7 +12,7 @@ export class Event1 implements BasicEvent {
   handle(state: BasicSimSlice): BasicSimSlice {
     state.simParams.k++;
 
-    if (state.simParams.z === 0) {
+    if (state.simParams.z < state.rules.maxZ) {
       state.simParams.z++;
       state.eventList.push(
         new Event2(this.modelTime + state.randomizer.next().value),

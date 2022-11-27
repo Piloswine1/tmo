@@ -1,11 +1,12 @@
 import { Event1 } from "./events/event1.ts";
 import { BasicSimulation } from "./simulation.ts";
-import { BasicSimulationPool } from "./simulatorPool.ts";
+import { BasicSimulationPool } from "./simulationPool.ts";
 
 const simPool = new BasicSimulationPool();
 simPool.run();
 simPool.normalizeMetrics();
-simPool.dumpCSV('logs/events.csv');
+simPool.dumpCSV("logs/events.csv");
+
 //simPool.dumpMetrics();
 
 //const sim = new BasicSimulation();

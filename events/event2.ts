@@ -12,7 +12,7 @@ export class Event2 implements BasicEvent {
     state.simParams.k--;
     state.simParams.done++;
 
-    if (state.simParams.k > state.rules.maxK) {
+    if (state.simParams.k > state.simParams.z) {
       state.eventList.push(
         new Event2(this.modelTime + state.randomizer.next().value),
       );

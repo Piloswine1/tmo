@@ -16,15 +16,17 @@ export type BasicParams = {
 
 export type BasicRules = {
   maxK: number;
+  maxZ: number;
 };
 
-export type BasicMetrics = Map<number, number[]>;
+export type BasicMetrics = Map<number, number[][]>;
 
 export class BasicSimulation {
   private eventList: BasicEvent[] = [];
   private randomizer = ITS(0);
   private rules: BasicRules = {
     maxK: 1,
+    maxZ: 1,
   };
   private simParams: BasicParams = {
     k: 0,
@@ -44,8 +46,14 @@ export class BasicSimulation {
     this.randomizer = ITS(num);
   }
 
-  setParams(params: BasicParams) {
-    this.simParams = params;
+  clear() {
+    this.simParams = {
+      k: 0,
+      z: 0,
+
+      done: 0,
+      failed: 0,
+    };
   }
 
   setRules(rules: BasicRules) {
@@ -70,10 +78,7 @@ export class BasicSimulation {
   }
 
   private set state(slice: BasicSimSlice) {
-    this.randomizer = slice.randomizer;
     this.eventList = slice.eventList.sort(eventsSorter);
-    this.simParams = slice.simParams;
-    this.metrics = slice.metrics;
   }
 
   getMetrics() {
@@ -90,7 +95,7 @@ export class BasicSimulation {
 
   private prepareMetrics() {
     this.metrics.clear();
-    this.eventList.push(new EventObserver(0, 1));
+    this.eventList.push(new EventObserver(0, 0.5));
   }
 
   run() {

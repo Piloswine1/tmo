@@ -11,15 +11,12 @@ export class EventObserver implements BasicEvent {
   }
 
   handle(state: BasicSimSlice): BasicSimSlice {
-    const k = state.simParams.k;
-    const z = state.simParams.z;
+    const p = Array.from(
+      Array(state.rules.maxK + 1),
+      () => Array(state.rules.maxZ + 1).fill(0),
+    );
 
-	const p = Array(state.rules.maxK * 2 + 1).fill(0);
-    if (k === 0 && z === 0) p[0] = 1;
-    if (k === 1 && z === 0) p[1] = 1;
-    if (k === 1 && z === 0) p[2] = 1;
-    if (k === 1 && z === 1) p[3] = 1;
-    if (k === 2 && z === 1) p[4] = 1;
+    p[state.simParams.k][state.simParams.z] = 1;
 
     state.eventList.push(
       new EventObserver(this.modelTime + this.timeStep, this.timeStep),
