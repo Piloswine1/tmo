@@ -5,18 +5,27 @@ import { sumArrays } from "./utils.ts";
 export class BasicSimulationPool {
   private simulation = new BasicSimulation();
   private maxIterations = 1000;
-  private rules: BasicRules = { maxK: 2, maxZ: 1 };
   private metrics: BasicMetrics = new Map();
+  private intensity = 1;
 
   private mergeMetrics(metrics: BasicMetrics) {
     metrics.forEach((metric, time) => {
+      const rules = this.simulation.getRules();
       const onTime = this.metrics.get(time) ??
         Array.from(
-          Array(this.rules.maxK + 1),
-          () => Array(this.rules.maxZ + 1).fill(0),
+          Array(rules.maxK + 1),
+          () => Array(rules.maxZ + 1).fill(0),
         );
       this.metrics.set(time, sumArrays(onTime, metric));
     });
+  }
+
+  setIntensity(intensity: number) {
+    this.intensity = intensity;
+  }
+
+  getSimulation() {
+    return this.simulation;
   }
 
   normalizeMetrics() {
@@ -59,8 +68,8 @@ export class BasicSimulationPool {
     for (let i = 0; i < this.maxIterations; i++) {
       this.simulation.clear();
       this.simulation.setSeed(i);
-      this.simulation.setRules(this.rules);
-      this.simulation.setEvents([new Event1(0)]);
+      const events = Array.from(Array(this.intensity), () => new Event1(0));
+      this.simulation.setEvents(events);
       this.simulation.run();
 
       this.mergeMetrics(this.simulation.getMetrics());

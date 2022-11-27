@@ -1,16 +1,25 @@
-import { Event1 } from "./events/event1.ts";
-import { BasicSimulation } from "./simulation.ts";
+import { Command } from "https://deno.land/x/cliffy@v0.25.4/command/mod.ts";
 import { BasicSimulationPool } from "./simulationPool.ts";
 
-const simPool = new BasicSimulationPool();
-simPool.run();
-simPool.normalizeMetrics();
-simPool.dumpCSV("logs/events.csv");
+await new Command()
+  .name("Sim")
+  .version("1.0.0")
+  .option("-i, --intensity <intensity:number>", "Sim intensity", { default: 1 })
+  .option("-k, --maxK <maxK:number>", "Sim maxK", { default: 1 })
+  .option("-z, --maxZ <maxZ:number>", "Sim maxZ", { default: 1 })
+  .option("-t, --timeStep <timeStep:number>", "Sim timeStep", { default: 1 })
+  .option("-o, --output <output:string>", "Sim output", {
+    default: "logs/events.csv",
+  })
+  .action(({ intensity, maxK, maxZ, timeStep, output }) => {
+    const simPool = new BasicSimulationPool();
 
-//simPool.dumpMetrics();
+    simPool.setIntensity(intensity);
+    simPool.getSimulation().setRules({ maxZ, maxK });
+    simPool.getSimulation().setTimeStep(timeStep);
 
-//const sim = new BasicSimulation();
-//sim.setRules({maxK: 2});
-//sim.setEvents([new Event1(0)]);
-//sim.run();
-//console.log(sim.getMetrics());
+    simPool.run();
+    simPool.normalizeMetrics();
+    simPool.dumpCSV(output);
+  })
+  .parse();

@@ -5,6 +5,12 @@ import { BasicSimSlice } from "./simulationSlice.ts";
 
 const eventsSorter = (a: BasicEvent, b: BasicEvent) =>
   a.modelTime - b.modelTime;
+const getDefaultParams = () => ({
+  k: 0,
+  z: 0,
+  done: 0,
+  failed: 0,
+});
 
 export type BasicParams = {
   k: number;
@@ -28,15 +34,10 @@ export class BasicSimulation {
     maxK: 1,
     maxZ: 1,
   };
-  private simParams: BasicParams = {
-    k: 0,
-    z: 0,
-
-    done: 0,
-    failed: 0,
-  };
+  private simParams: BasicParams = getDefaultParams();
   private maxModelTime = 1000;
   private metrics: BasicMetrics = new Map();
+  private timeStep = 1.0;
 
   setEvents(events: BasicEvent[]) {
     this.eventList = events;
@@ -47,17 +48,19 @@ export class BasicSimulation {
   }
 
   clear() {
-    this.simParams = {
-      k: 0,
-      z: 0,
-
-      done: 0,
-      failed: 0,
-    };
+    this.simParams = getDefaultParams();
   }
 
   setRules(rules: BasicRules) {
     this.rules = rules;
+  }
+
+  setTimeStep(timeStep: number) {
+    this.timeStep = timeStep;
+  }
+
+  getRules() {
+    return this.rules;
   }
 
   setMaxModelTime(time: number) {
@@ -95,7 +98,7 @@ export class BasicSimulation {
 
   private prepareMetrics() {
     this.metrics.clear();
-    this.eventList.push(new EventObserver(0, 0.5));
+    this.eventList.push(new EventObserver(0, this.timeStep));
   }
 
   run() {
