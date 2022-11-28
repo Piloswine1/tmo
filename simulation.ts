@@ -25,7 +25,7 @@ export type BasicRules = {
   maxZ: number;
 };
 
-export type BasicMetrics = Map<number, number[][]>;
+export type BasicMetrics = Map<number, number[]>;
 
 export class BasicSimulation {
   private eventList: BasicEvent[] = [];

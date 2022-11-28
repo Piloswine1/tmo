@@ -11,13 +11,13 @@ export class BasicSimulationPool {
   private mergeMetrics(metrics: BasicMetrics) {
     metrics.forEach((metric, time) => {
       const rules = this.simulation.getRules();
-      const onTime = this.metrics.get(time) ??
-        Array.from(
-          Array(rules.maxK + 1),
-          () => Array(rules.maxZ + 1).fill(0),
-        );
+      const onTime = this.metrics.get(time) ?? Array(rules.maxK + 1).fill(0);
       this.metrics.set(time, sumArrays(onTime, metric));
     });
+  }
+
+  setMaxIterations(maxIterations: number) {
+    this.maxIterations = maxIterations;
   }
 
   setIntensity(intensity: number) {
@@ -32,7 +32,7 @@ export class BasicSimulationPool {
     for (const [time, p] of this.metrics.entries()) {
       this.metrics.set(
         time,
-        p.map((row) => row.map((e) => e / this.maxIterations)),
+        p.map((e) => e / this.maxIterations),
       );
     }
   }
@@ -47,16 +47,12 @@ export class BasicSimulationPool {
 
     await file.write(
       encoder.encode(
-        `t;${
-          this.metrics.get(0)?.map((row, i) =>
-            row.map((_, innerI) => `P${i}${innerI}`)
-          ).flat().join(";")
-        }\n`,
+        `t;${this.metrics.get(0)?.map((_, i) => `P${i}`).join(";")}\n`,
       ),
     );
 
     for (const [time, p] of this.metrics.entries()) {
-      await file.write(encoder.encode(`${time};${p.flat().join(";")}\n`));
+      await file.write(encoder.encode(`${time};${p.join(";")}\n`));
     }
 
     file.close();
