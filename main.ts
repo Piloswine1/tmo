@@ -13,20 +13,25 @@ await new Command()
   })
   .option("-k, --maxK <maxK:number>", "Sim maxK", { default: 2 })
   .option("-z, --maxZ <maxZ:number>", "Sim maxZ", { default: 1 })
-  .option("-t, --timeStep <timeStep:number>", "Sim timeStep", { default: 1 })
+  .option("-s, --timeStep <timeStep:number>", "Sim timeStep", { default: 1 })
+  .option("-t, --maxTime <maxTime:number>", "Sim maxTime", { default: 1000 })
   .option("-o, --output <output:string>", "Sim output", {
     default: "logs/events.csv",
   })
-  .action(({ intensity, iterations, maxK, maxZ, timeStep, output }) => {
-    const simPool = new BasicSimulationPool();
+  .action(
+    ({ intensity, iterations, maxK, maxZ, timeStep, maxTime, output }) => {
+      const simPool = new BasicSimulationPool();
 
-    simPool.setMaxIterations(iterations);
-    simPool.setIntensity(intensity);
-    simPool.getSimulation().setRules({ maxZ, maxK });
-    simPool.getSimulation().setTimeStep(timeStep);
+      simPool.setMaxIterations(iterations);
+      simPool.setIntensity(intensity);
+      simPool.getSimulation().setRules({ maxZ, maxK });
+      simPool.getSimulation().setTimeStep(timeStep);
+      simPool.getSimulation().setMaxModelTime(maxTime);
 
-    simPool.run();
-    simPool.normalizeMetrics();
-    simPool.dumpCSV(output);
-  })
+      //console.log({params: simPool.getSimulation().getParams()});
+      simPool.run();
+      simPool.normalizeMetrics();
+      simPool.dumpCSV(output);
+    },
+  )
   .parse();

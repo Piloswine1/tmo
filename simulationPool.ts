@@ -64,7 +64,11 @@ export class BasicSimulationPool {
     for (let i = 0; i < this.maxIterations; i++) {
       this.simulation.clear();
       this.simulation.setSeed(i);
-      const events = Array.from(Array(this.intensity), () => new Event1(0));
+
+      const events = Array.from(
+        Array(this.intensity),
+        () => new Event1(this.simulation.getRandTime() as number),
+      );
       this.simulation.setEvents(events);
       this.simulation.run();
 

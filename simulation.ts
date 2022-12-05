@@ -67,6 +67,14 @@ export class BasicSimulation {
     this.maxModelTime = time;
   }
 
+  getParams() {
+    return this.simParams;
+  }
+
+  getRandTime() {
+    return this.randomizer.next().value;
+  }
+
   /**
    * @returns state without first (e.g. next) event
    */
@@ -98,7 +106,7 @@ export class BasicSimulation {
 
   private prepareMetrics() {
     this.metrics.clear();
-    this.eventList.push(new EventObserver(0, this.timeStep));
+    this.eventList = [new EventObserver(0, this.timeStep), ...this.eventList];
   }
 
   run() {
