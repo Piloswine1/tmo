@@ -1,6 +1,7 @@
 import { BasicEvent } from "./events/event.type.ts";
+import { Event1 } from "./events/event1.ts";
 import { EventObserver } from "./events/eventObserver.ts";
-import { ITS } from "./rand/ITS.ts";
+import { makeITS } from "./rand/ITS.ts";
 import { BasicSimSlice } from "./simulationSlice.ts";
 
 const eventsSorter = (a: BasicEvent, b: BasicEvent) =>
@@ -23,28 +24,34 @@ export type BasicParams = {
 export type BasicRules = {
   maxK: number;
   maxZ: number;
+
+  intencivityEv1: number;
+  intencivityEv2: number;
 };
 
 export type BasicMetrics = Map<number, number[]>;
 
 export class BasicSimulation {
   private eventList: BasicEvent[] = [];
-  private randomizer = ITS(0);
+  private randomizer = makeITS(0);
   private rules: BasicRules = {
     maxK: 1,
     maxZ: 1,
+
+    intencivityEv1: 1,
+    intencivityEv2: 1,
   };
   private simParams: BasicParams = getDefaultParams();
   private maxModelTime = 1000;
   private metrics: BasicMetrics = new Map();
   private timeStep = 1.0;
 
-  setEvents(events: BasicEvent[]) {
-    this.eventList = events;
+  initEvents() {
+    this.eventList = [new Event1(this.randomizer.next(this.rules.intencivityEv1))];
   }
 
   setSeed(num: number) {
-    this.randomizer = ITS(num);
+    this.randomizer = makeITS(num);
   }
 
   clear() {
@@ -71,8 +78,8 @@ export class BasicSimulation {
     return this.simParams;
   }
 
-  getRandTime() {
-    return this.randomizer.next().value;
+  getRandTime(L = 1) {
+    return this.randomizer.next(L);
   }
 
   /**

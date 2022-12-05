@@ -1,12 +1,10 @@
-import { Event1 } from "./events/event1.ts";
-import { BasicMetrics, BasicRules, BasicSimulation } from "./simulation.ts";
+import { BasicMetrics, BasicSimulation } from "./simulation.ts";
 import { sumArrays } from "./utils.ts";
 
 export class BasicSimulationPool {
   private simulation = new BasicSimulation();
   private maxIterations = 1000;
   private metrics: BasicMetrics = new Map();
-  private intensity = 1;
 
   private mergeMetrics(metrics: BasicMetrics) {
     metrics.forEach((metric, time) => {
@@ -18,10 +16,6 @@ export class BasicSimulationPool {
 
   setMaxIterations(maxIterations: number) {
     this.maxIterations = maxIterations;
-  }
-
-  setIntensity(intensity: number) {
-    this.intensity = intensity;
   }
 
   getSimulation() {
@@ -65,11 +59,7 @@ export class BasicSimulationPool {
       this.simulation.clear();
       this.simulation.setSeed(i);
 
-      const events = Array.from(
-        Array(this.intensity),
-        () => new Event1(this.simulation.getRandTime() as number),
-      );
-      this.simulation.setEvents(events);
+      this.simulation.initEvents();
       this.simulation.run();
 
       this.mergeMetrics(this.simulation.getMetrics());

@@ -15,7 +15,9 @@ export class Event1 implements BasicEvent {
     if (state.simParams.z < state.rules.maxZ) {
       state.simParams.z++;
       state.eventList.push(
-        new Event2(this.modelTime + state.randomizer.next().value),
+        new Event2(
+          this.modelTime + state.randomizer.next(state.rules.intencivityEv2),
+        ),
       );
     } else {
       if (state.simParams.k <= state.rules.maxK) {
@@ -27,7 +29,9 @@ export class Event1 implements BasicEvent {
     }
 
     state.eventList.push(
-      new Event1(this.modelTime + state.randomizer.next().value),
+      new Event1(
+        this.modelTime + state.randomizer.next(state.rules.intencivityEv1),
+      ),
     );
 
     return state;

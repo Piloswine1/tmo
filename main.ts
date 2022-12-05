@@ -7,7 +7,12 @@ await new Command()
   .description(
     "Perfoming basic queueing theory simulation with option of varying of params",
   )
-  .option("--intensity <intensity:number>", "Sim intensity", { default: 1 })
+  .option("-L, --intensityL <intensityEv1:number>", "Sim intensity", {
+    default: 1,
+  })
+  .option("-M, --intensityM <intensityEv2:number>", "Sim intensity", {
+    default: 1,
+  })
   .option("-i, --iterations <iterations:number>", "Sim iterations", {
     default: 1000,
   })
@@ -19,12 +24,27 @@ await new Command()
     default: "logs/events.csv",
   })
   .action(
-    ({ intensity, iterations, maxK, maxZ, timeStep, maxTime, output }) => {
+    (
+      {
+        intensityL,
+        intensityM,
+        iterations,
+        maxK,
+        maxZ,
+        timeStep,
+        maxTime,
+        output,
+      },
+    ) => {
       const simPool = new BasicSimulationPool();
 
       simPool.setMaxIterations(iterations);
-      simPool.setIntensity(intensity);
-      simPool.getSimulation().setRules({ maxZ, maxK });
+      simPool.getSimulation().setRules({
+        maxZ,
+        maxK,
+        intencivityEv1: intensityL,
+        intencivityEv2: intensityM,
+      });
       simPool.getSimulation().setTimeStep(timeStep);
       simPool.getSimulation().setMaxModelTime(maxTime);
 
